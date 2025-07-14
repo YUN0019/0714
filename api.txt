@@ -1,0 +1,54 @@
+
+| 安裝指令                             | 說明                             |
+| -------------------------------- | ------------------------------ |
+| `pip install Flask`              | 安裝 Flask（Web API 用）✅           |
+| `pip install selenium`           | 安裝 Selenium（瀏覽器自動化）✅           |
+| `pip install pytesseract`        | 安裝 Python 的 Tesseract 接口 ✅     |
+| `pip install Pillow`             | 安裝影像處理套件，讓 pytesseract 可以讀圖片 ✅ |
+| `sudo apt install tesseract-ocr` | 安裝 OCR 引擎本體 ✅                  |
+
+--------------------------------------------------
+
+🚀 該怎麼做？
+1️⃣ 安裝套件
+pip install webdriver-manager
+2️⃣ 修改 Selenium 啟動程式如下：
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+
+chrome_options = Options()
+chrome_options.add_argument("--headless")  # 如需看畫面可註解掉
+chrome_options.add_argument("--disable-gpu")
+
+driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+
+
+---------------------------------------------------------
+✅ 驗證碼辨識需求說明：
+📌 功能目標：
+前端上傳一張圖片（驗證碼）
+
+後端：
+
+接收圖片
+
+用 pytesseract 分析圖片文字
+
+回傳辨識出來的驗證碼字串
+
+-------------------------------------------------------------
+Ubuntu / Debian
+bash
+複製
+編輯
+sudo apt update
+sudo apt install tesseract-ocr
+如果你要安裝特定語言包（例如中文），可以額外安裝：
+
+bash
+複製
+編輯
+sudo apt install tesseract-ocr-chi-sim  # 簡體中文
+sudo apt install tesseract-ocr-chi-tra  # 繁體中文
