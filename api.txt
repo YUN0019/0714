@@ -52,3 +52,35 @@ bash
 編輯
 sudo apt install tesseract-ocr-chi-sim  # 簡體中文
 sudo apt install tesseract-ocr-chi-tra  # 繁體中文
+
+---------------------------------------------------------------
+1. 前端框架或技術選擇
+(1) 簡單純前端靜態頁面
+用 HTML + CSS + JavaScript（Vanilla JS）寫一個簡單頁面。
+
+用 Ajax（fetch 或 XMLHttpRequest）呼叫你 Flask 寫的 API。
+
+這種做法輕量，開發快，適合功能不複雜。
+
+(2) 前端框架（React、Vue、Angular）
+如果你想做 SPA（單頁應用），可以用 React 或 Vue 等。
+
+這些框架能讓 UI 更互動且管理複雜狀態更方便。
+
+但學習曲線比較陡，且開發時間較長。
+
+(3) Flask + 模板引擎（Jinja2）
+Flask 本身內建 Jinja2 模板，適合做簡單動態頁面。
+
+用 Flask 直接渲染 HTML 頁面，把前後端合在一個服務。
+
+適合快速上手，且不想用額外前端框架時。
+
+2. 基本前端工作流程範例
+假設你用 Flask + Jinja2：
+
+你的後端 Flask 新增一個路由 /，回傳 HTML 表單（輸入帳號密碼、按鈕送出）。
+
+使用者填好後，按送出，表單用 JavaScript 拿資料送到後端 API（例如 /login）。
+
+後端處理後回傳結果，前端再顯示結果（成功或失敗）。
