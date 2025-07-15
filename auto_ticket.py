@@ -1,63 +1,88 @@
+#客戶端腳本
+#連接API _demo.py
+
+#3️⃣ 如何改成其他藝人/活動？
+#只要修改 auto_ticket.py 開頭的參數：
+#Apply to auto_ticket....
+#即可搶不同活動的票！
+
 import requests
-import time     # 修改到 再問AI　關於搶票位置用中文有甚麼問題的部分！
+import sys
+import time
 
 API_TOKEN = "my_secret_token"
 BASE_URL = "http://127.0.0.1:5000"
 HEADERS = {"X-API-TOKEN": API_TOKEN}
 
-# 1. 打開活動主頁
-activity_url = "https://tixcraft.com/activity/detail/25_junwon"  # 請填入正確活動主頁網址
+# ====== 參數設定 ======
+ARTIST_KEYWORD = "鄭準元JUNG JUNWON《THE ONE DAY》台北見面會"
+AREA_KEYWORDS = ["A區"]
+PRICE_KEYWORDS = ["5400"]
+TICKET_COUNT = 1
+EVENT_URL = "https://tixcraft.com/activity/detail/25_junwon"  # 若有活動頁網址可直接填入，否則留空
 
-def safe_post(url, **kwargs):
+# ====== API 呼叫工具函式 ======
+def call_api(endpoint, payload=None):
     try:
-        resp = requests.post(url, headers=HEADERS, timeout=10, **kwargs)
-        resp.raise_for_status()
+        resp = requests.post(f"{BASE_URL}/{endpoint}", headers=HEADERS, json=payload or {})
         data = resp.json()
-        print(f"{url.split('/')[-1]}:", data)
+        print(f"{endpoint} 回傳：", data)
+        if data.get('status') != 'success':
+            print(f"❌ {endpoint} 失敗，訊息：{data.get('message')}")
+            # 只要不是 solve_captcha，才 exit
+            if endpoint != "solve_captcha":
+                sys.exit(1)
         return data
     except Exception as e:
-        print(f"[ERROR] {url}: {e}")
-        return None
+        print(f"❌ 呼叫 {endpoint} 發生例外：{e}")
+        if endpoint != "solve_captcha":
+            sys.exit(1)
 
-# 打開活動頁
-safe_post(f"{BASE_URL}/open_url", json={"url": activity_url})
-time.sleep(2)
+# ====== 主流程 ======
+def main():
+    # 1. 載入 cookie（如有）
+    resp = call_api("load_cookie")
+    if resp.get('status') != 'success':
+        print("⚠️ Cookie 載入失敗，請於瀏覽器手動登入帳號，登入完成後按 Enter...")
+        input()
+        call_api("save_cookie")
+        print("✅ Cookie 已儲存，後續流程將自動化...")
+        time.sleep(1)
 
-# 載入 cookie
-safe_post(f"{BASE_URL}/load_cookie")
-time.sleep(1)
+    # 2. 跳轉活動頁或搜尋
+    if EVENT_URL:
+        call_api("goto_event_page", {"url": EVENT_URL})
+        time.sleep(2)
+    else:
+        call_api("search_event", {"keyword": ARTIST_KEYWORD})
+        time.sleep(2)
+        call_api("enter_event_detail")
+        time.sleep(2)
 
-# 自動刷新等開賣
-while True:
-    result = safe_post(f"{BASE_URL}/refresh", json={
-        "url": activity_url,
-        "interval": 2,
-        "trigger_text": "立即訂票"
-    })
-    if result and result.get("status") == "success":
-        break
+    # 3. 點擊立即購票
+    call_api("click_buy_now")
+    time.sleep(2)
+
+    # 4. 選擇區域/價格（自動比對關鍵字）
+    call_api("select_area_price", {"area_keywords": AREA_KEYWORDS, "price_keywords": PRICE_KEYWORDS})
+    time.sleep(2)
+
+    # 5. 直接選票數（跳過 select_area_price）
+    call_api("select_ticket_count", {"count": TICKET_COUNT})
+    time.sleep(2)
+
+    # 6. 辨識驗證碼
+    call_api("solve_captcha")
+    time.sleep(2)
+
+    # 7. 勾選同意條款
+    call_api("agree_terms")
     time.sleep(1)
 
-# 選特定票種與張數
-ticket_type_value = "A區5400"  # 這個 value 請用 F12 工具查票種下拉選單的 value
-quantity = 2
-safe_post(f"{BASE_URL}/select_ticket", json={
-    "ticket_type_value": ticket_type_value,
-    "quantity": quantity
-})
-time.sleep(1)
+    # 8. 點擊確認張數
+    call_api("confirm_ticket")
+    print("🎉 全部流程執行完畢，請於瀏覽器確認結帳頁面！")
 
-# 選特定座位（請根據實際 selector 調整）
-seat_selector = ".area-seat[data-seat='A1']"  # 這個 selector 請用 F12 工具查座位元素
-safe_post(f"{BASE_URL}/select_seat", json={
-    "seat_selector": seat_selector
-})
-time.sleep(1)
-
-# 驗證碼處理（如有）
-print("如遇到驗證碼，請手動截圖並上傳圖片，或在此處加入自動上傳程式碼。")
-# with open("captcha.png", "rb") as f:
-#     files = {"captcha": f}
-#     resp = requests.post(f"{BASE_URL}/captcha", headers=HEADERS, files=files)
-#     print("captcha:", resp.json())
+if __name__ == "__main__":
+    main()
 

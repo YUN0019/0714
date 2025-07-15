@@ -1,0 +1,111 @@
+2025-07-14 17:27:15,354 - INFO - ====== WebDriver manager ======
+2025-07-14 17:27:16,328 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.174.166:5000
+2025-07-14 17:27:16,328 - INFO - [33mPress CTRL+C to quit[0m
+2025-07-14 17:27:18,195 - INFO - Get LATEST chromedriver version for google-chrome
+2025-07-14 17:27:18,497 - INFO - Get LATEST chromedriver version for google-chrome
+2025-07-14 17:27:18,704 - INFO - Driver [C:\Users\Alexander\.wdm\drivers\chromedriver\win64\138.0.7204.94\chromedriver-win32/chromedriver.exe] found in cache
+2025-07-14 17:27:21,274 - INFO - 瀏覽器初始化完成
+2025-07-14 17:30:23,563 - INFO - ====== WebDriver manager ======
+2025-07-14 17:30:24,410 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.174.166:5000
+2025-07-14 17:30:24,410 - INFO - [33mPress CTRL+C to quit[0m
+2025-07-14 17:30:25,726 - INFO - Get LATEST chromedriver version for google-chrome
+2025-07-14 17:30:25,929 - INFO - Get LATEST chromedriver version for google-chrome
+2025-07-14 17:30:26,172 - INFO - Driver [C:\Users\Alexander\.wdm\drivers\chromedriver\win64\138.0.7204.94\chromedriver-win32/chromedriver.exe] found in cache
+2025-07-14 17:30:28,266 - INFO - 瀏覽器初始化完成
+2025-07-14 17:39:10,315 - INFO - ====== WebDriver manager ======
+2025-07-14 17:39:11,156 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.174.166:5000
+2025-07-14 17:39:11,156 - INFO - [33mPress CTRL+C to quit[0m
+2025-07-14 17:39:12,589 - INFO - Get LATEST chromedriver version for google-chrome
+2025-07-14 17:39:12,824 - INFO - Get LATEST chromedriver version for google-chrome
+2025-07-14 17:39:13,026 - INFO - Driver [C:\Users\Alexander\.wdm\drivers\chromedriver\win64\138.0.7204.94\chromedriver-win32/chromedriver.exe] found in cache
+2025-07-14 17:39:15,255 - INFO - 瀏覽器初始化完成
+2025-07-14 23:35:04,708 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.174.166:5000
+2025-07-14 23:35:04,709 - INFO - [33mPress CTRL+C to quit[0m
+2025-07-14 23:35:07,377 - INFO - patching driver executable C:\Users\Alexander\appdata\roaming\undetected_chromedriver\undetected_chromedriver.exe
+2025-07-14 23:35:10,244 - INFO - 瀏覽器初始化完成 (undetected-chromedriver)
+2025-07-14 23:49:48,067 - INFO - Cookie 已儲存
+2025-07-14 23:49:48,068 - INFO - 127.0.0.1 - - [14/Jul/2025 23:49:48] "POST /save_cookie HTTP/1.1" 200 -
+2025-07-15 14:20:26,178 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.174.166:5000
+2025-07-15 14:20:26,179 - INFO - [33mPress CTRL+C to quit[0m
+2025-07-15 14:20:29,307 - INFO - patching driver executable C:\Users\Alexander\appdata\roaming\undetected_chromedriver\undetected_chromedriver.exe
+2025-07-15 14:20:30,255 - INFO - 瀏覽器初始化完成 (undetected-chromedriver)
+2025-07-15 14:20:59,059 - INFO - 已開啟網址: https://tixcraft.com/your_event_url
+2025-07-15 14:20:59,065 - INFO - 127.0.0.1 - - [15/Jul/2025 14:20:59] "POST /open_url HTTP/1.1" 200 -
+2025-07-15 14:21:08,137 - ERROR - 選票或送單失敗: Message: no such element: Unable to locate element: {"method":"css selector","selector":"select#TicketForm_ticketPrice_01"}
+  (Session info: chrome=138.0.7204.101); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Stacktrace:
+	GetHandleVerifier [0x0x9744a3+62419]
+	GetHandleVerifier [0x0x9744e4+62484]
+	(No symbol) [0x0x7b2133]
+	(No symbol) [0x0x7fa8fe]
+	(No symbol) [0x0x7fac9b]
+	(No symbol) [0x0x843052]
+	(No symbol) [0x0x81f4b4]
+	(No symbol) [0x0x84087a]
+	(No symbol) [0x0x81f266]
+	(No symbol) [0x0x7ee852]
+	(No symbol) [0x0x7ef6f4]
+	GetHandleVerifier [0x0xbe4793+2619075]
+	GetHandleVerifier [0x0xbdfbaa+2599642]
+	GetHandleVerifier [0x0x99b04a+221050]
+	GetHandleVerifier [0x0x98b2c8+156152]
+	GetHandleVerifier [0x0x991c7d+183213]
+	GetHandleVerifier [0x0x97c388+94904]
+	GetHandleVerifier [0x0x97c512+95298]
+	GetHandleVerifier [0x0x96766a+9626]
+	BaseThreadInitThunk [0x0x773bfcc9+25]
+	RtlGetAppContainerNamedObjectPath [0x0x77bd82ae+286]
+	RtlGetAppContainerNamedObjectPath [0x0x77bd827e+238]
+Traceback (most recent call last):
+  File "C:\Users\Alexander\OneDrive\文件\GitHub\0714\demo.py", line 161, in select_ticket
+    ticket_dropdown = driver.find_element(By.CSS_SELECTOR, ticket_type_selector)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alexander\AppData\Local\Programs\Python\Python312-32\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 922, in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Alexander\AppData\Local\Programs\Python\Python312-32\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Alexander\AppData\Local\Programs\Python\Python312-32\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"select#TicketForm_ticketPrice_01"}
+  (Session info: chrome=138.0.7204.101); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Stacktrace:
+	GetHandleVerifier [0x0x9744a3+62419]
+	GetHandleVerifier [0x0x9744e4+62484]
+	(No symbol) [0x0x7b2133]
+	(No symbol) [0x0x7fa8fe]
+	(No symbol) [0x0x7fac9b]
+	(No symbol) [0x0x843052]
+	(No symbol) [0x0x81f4b4]
+	(No symbol) [0x0x84087a]
+	(No symbol) [0x0x81f266]
+	(No symbol) [0x0x7ee852]
+	(No symbol) [0x0x7ef6f4]
+	GetHandleVerifier [0x0xbe4793+2619075]
+	GetHandleVerifier [0x0xbdfbaa+2599642]
+	GetHandleVerifier [0x0x99b04a+221050]
+	GetHandleVerifier [0x0x98b2c8+156152]
+	GetHandleVerifier [0x0x991c7d+183213]
+	GetHandleVerifier [0x0x97c388+94904]
+	GetHandleVerifier [0x0x97c512+95298]
+	GetHandleVerifier [0x0x96766a+9626]
+	BaseThreadInitThunk [0x0x773bfcc9+25]
+	RtlGetAppContainerNamedObjectPath [0x0x77bd82ae+286]
+	RtlGetAppContainerNamedObjectPath [0x0x77bd827e+238]
+
+2025-07-15 14:21:08,171 - INFO - 127.0.0.1 - - [15/Jul/2025 14:21:08] "[35m[1mPOST /select_ticket HTTP/1.1[0m" 500 -
