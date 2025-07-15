@@ -5,6 +5,7 @@
 #只要修改 auto_ticket.py 開頭的參數：
 #Apply to auto_ticket....
 #即可搶不同活動的票！
+#測試存取1231212131312
 
 import requests
 import sys
