@@ -1,12 +1,40 @@
 import React, { useState } from 'react';
+import { AppBar, Toolbar, Typography, Container, Card, CardContent, TextField, Button, CircularProgress, Box, CssBaseline, ThemeProvider, createTheme, Paper } from '@mui/material';
+import KpopIcon from '@mui/icons-material/MusicNote';
+import TicketIcon from '@mui/icons-material/ConfirmationNumber';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#d500f9',
+    },
+    secondary: {
+      main: '#ff4081',
+    },
+    background: {
+      default: '#f3e5f5',
+    },
+  },
+  typography: {
+    fontFamily: '"Segoe UI", "Noto Sans TC", "Arial", sans-serif',
+    h2: {
+      fontWeight: 700,
+      letterSpacing: 2,
+    },
+  },
+});
 
 function App() {
-  const [eventUrl, setEventUrl] = useState('');
+  const [input, setInput] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [autoResult, setAutoResult] = useState(null);
 
+  const isUrl = (str) => /^https?:\/\//.test(str);
+
+  // 搜尋活動（用 input 當 keyword）
   const searchEvent = async () => {
     setLoading(true);
     setError(null);
@@ -18,7 +46,7 @@ function App() {
           'Content-Type': 'application/json',
           'X-API-TOKEN': 'my_secret_token'
         },
-        body: JSON.stringify({ keyword: eventUrl }) // 這裡暫時用 eventUrl 當作搜尋關鍵字
+        body: JSON.stringify({ keyword: input })
       });
       const data = await res.json();
       setResult(data);
@@ -29,6 +57,7 @@ function App() {
     }
   };
 
+  // 自動搶票（用 input 當 url）
   const autoTicket = async () => {
     setLoading(true);
     setError(null);
@@ -41,10 +70,10 @@ function App() {
           'X-API-TOKEN': 'my_secret_token'
         },
         body: JSON.stringify({
-          url: eventUrl,
-          area_keywords: ["A區"], // 可改成你要的區域
-          price_keywords: ["5400"], // 可改成你要的價格
-          ticket_count: 1 // 可改成你要的張數
+          url: input,
+          area_keywords: ["A區"],
+          price_keywords: ["5400"],
+          ticket_count: 1
         })
       });
       const data = await res.json();
@@ -56,46 +85,90 @@ function App() {
     }
   };
 
+  // 智能搜尋：若為網址則自動搶票，否則搜尋活動
+  const handleSearch = () => {
+    if (isUrl(input)) {
+      autoTicket();
+    } else {
+      searchEvent();
+    }
+  };
+
   return (
-    <div style={{ padding: 24, maxWidth: 480, margin: '0 auto', fontFamily: 'sans-serif' }}>
-      <h2>tixCraft 自動搶票前端 (React)</h2>
-      <div style={{ marginBottom: 16 }}>
-        <input
-          value={eventUrl}
-          onChange={e => setEventUrl(e.target.value)}
-          placeholder="輸入藝人活動頁面網址 (如 https://tixcraft.com/activity/detail/xxx)"
-          style={{ padding: 8, width: '70%', marginRight: 8 }}
-        />
-        <button onClick={searchEvent} disabled={loading || !eventUrl} style={{ padding: 8 }}>
-          {loading ? '搜尋中...' : '搜尋活動'}
-        </button>
-      </div>
-      {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}
-      {result && (
-        <div style={{ background: '#f6f6f6', padding: 12, borderRadius: 4, marginBottom: 16 }}>
-          <strong>API 回傳：</strong>
-          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>{JSON.stringify(result, null, 2)}</pre>
-        </div>
-      )}
-      <hr style={{ margin: '24px 0' }} />
-      <div style={{ marginBottom: 16 }}>
-        <input
-          value={eventUrl}
-          onChange={e => setEventUrl(e.target.value)}
-          placeholder="輸入藝人活動頁面網址 (如 https://tixcraft.com/activity/detail/xxx)"
-          style={{ padding: 8, width: '70%', marginRight: 8 }}
-        />
-        <button onClick={autoTicket} disabled={loading || !eventUrl} style={{ padding: 8, background: '#4caf50', color: 'white' }}>
-          {loading ? '執行中...' : '一鍵自動搶票'}
-        </button>
-      </div>
-      {autoResult && (
-        <div style={{ background: '#e8f5e9', padding: 12, borderRadius: 4 }}>
-          <strong>自動搶票結果：</strong>
-          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>{JSON.stringify(autoResult, null, 2)}</pre>
-        </div>
-      )}
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppBar position="static" color="primary" elevation={2}>
+        <Toolbar>
+          <KpopIcon sx={{ mr: 2, fontSize: 32 }} />
+          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 700, letterSpacing: 2 }}>
+            KPOP搶票神器
+          </Typography>
+          <FavoriteIcon sx={{ color: '#ff4081', fontSize: 28, mr: 1 }} />
+          <TicketIcon sx={{ color: '#fff176', fontSize: 28 }} />
+        </Toolbar>
+      </AppBar>
+      <Container maxWidth="sm" sx={{ mt: 5, mb: 5 }}>
+        <Card sx={{ borderRadius: 4, boxShadow: 6, mb: 3 }}>
+          <CardContent>
+            <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 700, color: 'primary.main' }}>
+              KPOP 🎤 自動搶票平台
+            </Typography>
+            <Typography align="center" sx={{ mb: 2, color: 'secondary.main' }}>
+              為粉絲而生，搶票不再手忙腳亂！💜
+            </Typography>
+            {/* 單一輸入框區塊 */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <TextField
+                label="藝人名稱或活動網址"
+                variant="outlined"
+                fullWidth
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                placeholder="如 鄭準元 或 https://tixcraft.com/activity/detail/xxx"
+                sx={{ mr: 2, background: '#fff', borderRadius: 2 }}
+                InputProps={{ startAdornment: <KpopIcon sx={{ color: 'primary.main', mr: 1 }} /> }}
+              />
+              <Button
+                onClick={handleSearch}
+                disabled={loading || !input}
+                variant="contained"
+                color="secondary"
+                size="large"
+                sx={{ minWidth: 120, fontWeight: 700, borderRadius: 2 }}
+              >
+                {loading ? <CircularProgress size={24} color="inherit" /> : '搜尋活動'}
+              </Button>
+            </Box>
+            {error && <Typography color="error" sx={{ mb: 2 }}>{error}</Typography>}
+            {(result || autoResult) && (
+              <Paper sx={{ background: '#f6f6f6', p: 2, borderRadius: 2, mb: 2 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>API 回傳：</Typography>
+                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0 }}>{JSON.stringify(result || autoResult, null, 2)}</pre>
+              </Paper>
+            )}
+            {/* 自動搶票按鈕區塊 */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+              <Button
+                onClick={autoTicket}
+                disabled={loading || !input}
+                variant="contained"
+                color="primary"
+                size="large"
+                sx={{ minWidth: 120, fontWeight: 700, borderRadius: 2 }}
+                startIcon={<TicketIcon />}
+              >
+                {loading ? <CircularProgress size={24} color="inherit" /> : '一鍵自動搶票'}
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+      </Container>
+      <Box component="footer" sx={{ py: 3, textAlign: 'center', background: 'linear-gradient(90deg, #d500f9 60%, #ff4081 100%)', color: '#fff' }}>
+        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+          KPOP搶票神器 | Powered by Python & React | For All KPOP Fans 💜
+        </Typography>
+      </Box>
+    </ThemeProvider>
   );
 }
 

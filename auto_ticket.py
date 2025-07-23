@@ -39,50 +39,72 @@ def call_api(endpoint, payload=None):
         if endpoint != "solve_captcha":
             sys.exit(1)
 
-# ====== 主流程 ======
-def main():
+def run_auto_ticket(EVENT_URL, ARTIST_KEYWORD, AREA_KEYWORDS, PRICE_KEYWORDS, TICKET_COUNT):
     # 1. 載入 cookie（如有）
     resp = call_api("load_cookie")
-    if resp.get('status') != 'success':
-        print("⚠️ Cookie 載入失敗，請於瀏覽器手動登入帳號，登入完成後按 Enter...")
-        input()
-        call_api("save_cookie")
-        print("✅ Cookie 已儲存，後續流程將自動化...")
-        time.sleep(1)
-
+    if not resp or resp.get('status') != 'success':
+        print("❌ Cookie 載入失敗，請於瀏覽器手動登入帳號，登入完成後按 Enter...")
+        return {'status': 'error', 'message': 'Cookie 載入失敗，請手動登入'}
     # 2. 跳轉活動頁或搜尋
     if EVENT_URL:
-        call_api("goto_event_page", {"url": EVENT_URL})
+        resp = call_api("goto_event_page", {"url": EVENT_URL})
         time.sleep(2)
+        if not resp or resp.get('status') != 'success':
+            print(f"❌ 跳轉活動頁失敗: {resp.get('message') if resp else '無回應'}")
+            return {'status': 'error', 'message': '跳轉活動頁失敗'}
+    elif ARTIST_KEYWORD:
+        resp = call_api("search_event", {"keyword": ARTIST_KEYWORD})
+        time.sleep(2)
+        if not resp or resp.get('status') != 'success':
+            print(f"❌ 搜尋活動失敗: {resp.get('message') if resp else '無回應'}")
+            return {'status': 'error', 'message': '搜尋活動失敗'}
+        resp = call_api("enter_event_detail")
+        time.sleep(2)
+        if not resp or resp.get('status') != 'success':
+            print(f"❌ 進入活動詳情頁失敗: {resp.get('message') if resp else '無回應'}")
+            return {'status': 'error', 'message': '進入活動詳情頁失敗'}
     else:
-        call_api("search_event", {"keyword": ARTIST_KEYWORD})
-        time.sleep(2)
-        call_api("enter_event_detail")
-        time.sleep(2)
-
+        print('❌ 缺少活動網址或關鍵字')
+        return {'status': 'error', 'message': '缺少活動網址或關鍵字'}
     # 3. 點擊立即購票
-    call_api("click_buy_now")
+    resp = call_api("click_buy_now")
     time.sleep(2)
-
+    if not resp or resp.get('status') != 'success':
+        print(f"❌ 點擊立即購票失敗: {resp.get('message') if resp else '無回應'}")
+        return {'status': 'error', 'message': '點擊立即購票失敗'}
     # 4. 選擇區域/價格（自動比對關鍵字）
-    call_api("select_area_price", {"area_keywords": AREA_KEYWORDS, "price_keywords": PRICE_KEYWORDS})
+    resp = call_api("select_area_price", {"area_keywords": AREA_KEYWORDS, "price_keywords": PRICE_KEYWORDS})
     time.sleep(2)
-
+    if not resp or resp.get('status') != 'success':
+        print(f"❌ 選擇區域/價格失敗: {resp.get('message') if resp else '無回應'}")
+        return {'status': 'error', 'message': '選擇區域/價格失敗'}
     # 5. 直接選票數（跳過 select_area_price）
-    call_api("select_ticket_count", {"count": TICKET_COUNT})
+    resp = call_api("select_ticket_count", {"count": TICKET_COUNT})
     time.sleep(2)
-
+    if not resp or resp.get('status')!= 'success':
+        print(f"❌ 選擇票數失敗: {resp.get('message') if resp else '無回應'}")
+        return {'status': 'error', 'message': '選擇票數失敗'}
     # 6. 辨識驗證碼
-    call_api("solve_captcha")
+    resp = call_api("solve_captcha")
     time.sleep(2)
-
+    # 不管驗證碼成功或失敗都繼續
     # 7. 勾選同意條款
-    call_api("agree_terms")
+    resp = call_api("agree_terms")
     time.sleep(1)
-
+    if not resp or resp.get('status') != 'success':
+        print(f"❌ 勾選同意條款失敗: {resp.get('message') if resp else '無回應'}")
+        return {'status': 'error', 'message': '勾選同意條款失敗'}
     # 8. 點擊確認張數
-    call_api("confirm_ticket")
-    print("🎉 全部流程執行完畢，請於瀏覽器確認結帳頁面！")
+    resp = call_api("confirm_ticket")
+    if not resp or resp.get('status') != 'success':
+        print(f"❌ 點擊確認張數失敗: {resp.get('message') if resp else '無回應'}")
+        return {'status': 'error', 'message': '點擊確認張數失敗'}
+    print('🎉 全部流程執行完畢，請於瀏覽器確認結帳頁面！')
+    return {"status": "success", "message": "全部流程執行完畢，請於瀏覽器確認結帳頁面！"}
+
+# ====== 主流程 ======
+def main():
+    run_auto_ticket(EVENT_URL, ARTIST_KEYWORD, AREA_KEYWORDS, PRICE_KEYWORDS, TICKET_COUNT)
 
 if __name__ == "__main__":
     main()

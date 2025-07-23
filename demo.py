@@ -13,13 +13,19 @@ import pytesseract
 from collections import Counter
 from selenium.common.exceptions import WebDriverException
 import os
+from flask import Flask
+from flask_cors import CORS
+from auto_ticket import run_auto_ticket  # 你需要把 auto_ticket.py 的主流程改成 function 並 import
+
+app = Flask(__name__)
+CORS(app)  # 這一行讓前端可以連線
 
 # ========== 設定 pytesseract 路徑 ==========
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\Alexander\tesseract\tesseract.exe'  # 請依實際安裝路徑調整
 
 API_TOKEN = "my_secret_token"
 driver = None
-app = Flask(__name__)
+
 
 def get_driver():
     global driver
@@ -295,6 +301,7 @@ def agree_terms():
     d = get_driver()
     for attempt in range(3):
         try:
+            logging.info('嘗試尋找同意條款 checkbox')
             checkbox = WebDriverWait(d, 5).until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, "input#TicketForm_agree"))
             )
@@ -308,6 +315,8 @@ def agree_terms():
             if attempt == 2:
                 return jsonify({'status': 'error', 'message': f'勾選同意條款失敗: {str(e)}', 'screenshot': path, 'title': d.title, 'url': d.current_url}), 500
             time.sleep(1)
+    logging.error('三次嘗試後仍無法勾選同意條款，流程中止')
+    return jsonify({'status': 'error', 'message': '三次嘗試後仍無法勾選同意條款'}), 500
 
 @app.route('/confirm_ticket', methods=['POST'])
 @require_token
@@ -410,6 +419,23 @@ def goto_event_page():
     except Exception as e:
         logging.exception(f'跳轉活動頁失敗: {str(e)}')
         return jsonify({'status': 'error', 'message': f'跳轉活動頁失敗: {str(e)}'}), 500
+
+@app.route('/auto_ticket', methods=['POST'])
+@require_token
+def auto_ticket():
+    data = request.get_json() or {}
+    url = data.get('url')
+    keyword = data.get('keyword')
+    area_keywords = data.get('area_keywords', ["A區"])
+    price_keywords = data.get('price_keywords', ["5400"])
+    ticket_count = data.get('ticket_count', 1)
+    if not url and not keyword:
+        return jsonify({'status': 'error', 'message': '缺少活動網址或關鍵字'}), 400
+    try:
+        result = run_auto_ticket(url, keyword, area_keywords, price_keywords, ticket_count)
+        return jsonify({'status': 'success', 'result': result})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
     init_browser()  # 直接主線程初始化
