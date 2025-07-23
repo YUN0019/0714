@@ -86,11 +86,11 @@ function App() {
   };
 
   // 智能搜尋：若為網址則自動搶票，否則搜尋活動
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (isUrl(input)) {
-      autoTicket();
+      await autoTicket();
     } else {
-      searchEvent();
+      await searchEvent();
     }
   };
 
